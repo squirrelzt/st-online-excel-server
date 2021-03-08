@@ -73,4 +73,9 @@ public class WorkSheetServiceImpl implements WorkSheetService {
         list.add(workSheet);
         return list;
     }
+
+    @Override
+    public void cellUpdated(Cell cell) {
+
+    }
 }
