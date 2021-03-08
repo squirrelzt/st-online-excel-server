@@ -1,5 +1,6 @@
 package com.excel.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.excel.domain.sheet.cell.Cell;
 import com.excel.domain.sheet.chart.ChartItem;
 import com.excel.domain.sheet.dataverification.DataVerification;
@@ -15,6 +16,7 @@ import com.excel.domain.sheet.luckysheet_conditionformat_save.LuckysheetConditio
 import com.excel.domain.sheet.luckysheet_select_save.LuckysheetSelectSave;
 import com.excel.domain.sheet.pivottable.PivotTable;
 import com.excel.service.WorkSheetService;
+import com.excel.websocket.WebSocketUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,6 @@ public class WorkSheetServiceImpl implements WorkSheetService {
 
     @Override
     public void cellUpdated(Cell cell) {
-
+        WebSocketUtils.sendMessageAll(JSON.toJSONString(cell));
     }
 }

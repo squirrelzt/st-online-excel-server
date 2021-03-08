@@ -30,6 +30,7 @@ public class WorkSheetController {
     @PostMapping("/cellUpdated")
     public Boolean cellUpdated(@RequestBody Cell cell) {
         log.info(JSON.toJSONString(cell));
+        workSheetService.cellUpdated(cell);
         return Boolean.TRUE;
     }
 }
