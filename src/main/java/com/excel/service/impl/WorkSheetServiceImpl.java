@@ -1,0 +1,76 @@
+package com.excel.service.impl;
+
+import com.excel.domain.sheet.cell.Cell;
+import com.excel.domain.sheet.chart.ChartItem;
+import com.excel.domain.sheet.dataverification.DataVerification;
+import com.excel.domain.sheet.frozen.Frozen;
+import com.excel.domain.sheet.image.ImageItem;
+import com.excel.domain.sheet.luckysheet_alternateformat_save.LuckysheetAlternateformatSaveItem;
+import com.excel.domain.sheet.WorkSheet;
+import com.excel.domain.sheet.calcchain.CalcChainItem;
+import com.excel.domain.sheet.config.*;
+import com.excel.domain.sheet.filter_select.FilterSelect;
+import com.excel.domain.sheet.luckysheet_alternateformat_save_modelCustom.LuckysheetAlternateformatSaveModelCustomItem;
+import com.excel.domain.sheet.luckysheet_conditionformat_save.LuckysheetConditionformatSaveItem;
+import com.excel.domain.sheet.luckysheet_select_save.LuckysheetSelectSave;
+import com.excel.domain.sheet.pivottable.PivotTable;
+import com.excel.service.WorkSheetService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@Service
+public class WorkSheetServiceImpl implements WorkSheetService {
+    @Override
+    public List<WorkSheet> initData() {
+        List<WorkSheet> list = new ArrayList<>(1);
+        WorkSheet workSheet = new WorkSheet();
+        workSheet.setName("My Online Sheet");
+        workSheet.setColor("");
+        workSheet.setIndex("0");
+        workSheet.setStatus(1);
+        workSheet.setOrder(0);
+        workSheet.setHide(0);
+        workSheet.setRow(30);
+        workSheet.setColumn(20);
+        workSheet.setDefaultRowHeight(20);
+        workSheet.setDefaultColWidth(73);
+        workSheet.setCelldata(new Cell[0]);
+
+        WorkSheetConfig config = new WorkSheetConfig();
+        config.setMerge(new Merge());
+        config.setRowlen(new Rowlen());
+        config.setColumnlen(new Columnlen());
+        config.setRowhidden(new Rowhidden());
+        config.setColhidden(new Colhidden());
+        config.setBorderInfo(new BorderInfo());
+        config.setAuthority(new Authority());
+        workSheet.setConfig(config);
+
+        workSheet.setScrollLeft(0);
+        workSheet.setScrollTop(0);
+
+        workSheet.setLuckysheet_select_save(new LuckysheetSelectSave[0]);
+
+        workSheet.setCalcChain(new CalcChainItem[0]);
+        workSheet.setIsPivotTable(false);
+        workSheet.setPivotTable(new PivotTable());
+        workSheet.setFilter_select(new FilterSelect());
+        workSheet.setFilter("");
+        workSheet.setLuckysheet_alternateformat_save(new LuckysheetAlternateformatSaveItem[0]);
+        workSheet.setLuckysheet_alternateformat_save_modelCustom(new LuckysheetAlternateformatSaveModelCustomItem[0]);
+        workSheet.setLuckysheet_conditionformat_save(new LuckysheetConditionformatSaveItem());
+        workSheet.setFrozen(new Frozen());
+        workSheet.setChart(new ChartItem[0]);
+        workSheet.setZoomRatio(1);
+        workSheet.setImage(new ImageItem[0]);
+        workSheet.setShowGridLines(1);
+        workSheet.setDataVerification(new DataVerification());
+
+        list.add(workSheet);
+        return list;
+    }
+}
