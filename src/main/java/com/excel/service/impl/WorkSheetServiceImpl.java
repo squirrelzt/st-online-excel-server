@@ -18,14 +18,21 @@ import com.excel.domain.sheet.pivottable.PivotTable;
 import com.excel.service.WorkSheetService;
 import com.excel.websocket.WebSocketUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 public class WorkSheetServiceImpl implements WorkSheetService {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
     @Override
     public List<WorkSheet> initData() {
         List<WorkSheet> list = new ArrayList<>(1);
@@ -73,11 +80,27 @@ public class WorkSheetServiceImpl implements WorkSheetService {
         workSheet.setDataVerification(new DataVerification());
 
         list.add(workSheet);
+
         return list;
     }
 
     @Override
     public void cellUpdated(Cell cell) {
         WebSocketUtils.sendMessageAll(JSON.toJSONString(cell));
+        jdbcTemplate.update("update CELL set v=? where sheet_id = ? and r = ? and c = ?",
+                JSON.toJSONString(cell.getV()),
+                "1",
+                cell.getR(),
+                cell.getC());
+    }
+
+    private void getCellData() {
+        List list = jdbcTemplate.queryForList("select v from cell", List.class);
+//        Map map = jdbcTemplate.queryForMap("select * from cell");
+//        String v = (String)map.get("v");
+//        Cell cell = JSON.parseObject(v, Cell.class);
+//        log.info(v);
+        log.info(list.toString());
+        list.stream().forEach(item -> System.out.println(item.toString()));
     }
 }

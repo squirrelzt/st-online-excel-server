@@ -1,21 +1,12 @@
-DROP TABLE IF EXISTS chess;
-CREATE TABLE chess  (
+DROP TABLE IF EXISTS cell;
+CREATE TABLE cell  (
   id int IDENTITY,
-  name varchar(255),
-  color varchar(255),
-  x varchar(255),
-  y varchar(255),
-  state varchar(255),
-  location varchar(255)
+  sheet_id varchar(10),
+  r varchar(10),
+  c varchar(10),
+  fa varchar(10),
+  t varchar(10),
+  m varchar(255),
+  v varchar(255)
 );
-DROP TABLE IF EXISTS person;
-CREATE TABLE person  (
-  id int IDENTITY,
-  username varchar(50) ,
-  password varchar(50),
-  color varchar(20),
-  role varchar(20),
-  state varchar(20) ,
-  opponent_id varchar(10)
-)
 

@@ -24,7 +24,7 @@ spring:
     driver-class-name: org.h2.Driver
     username: root
     password: 123456
-    initialization-mode: always
+    initialization-mode: embedded  #always;embedded;never
 
   jpa:
     database: h2
