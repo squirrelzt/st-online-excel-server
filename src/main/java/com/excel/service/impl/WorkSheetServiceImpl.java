@@ -2,6 +2,7 @@ package com.excel.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.excel.domain.sheet.cell.Cell;
+import com.excel.domain.sheet.cell.CellV;
 import com.excel.domain.sheet.chart.ChartItem;
 import com.excel.domain.sheet.dataverification.DataVerification;
 import com.excel.domain.sheet.frozen.Frozen;
@@ -21,10 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -47,7 +50,13 @@ public class WorkSheetServiceImpl implements WorkSheetService {
         workSheet.setColumn(20);
         workSheet.setDefaultRowHeight(20);
         workSheet.setDefaultColWidth(73);
-        workSheet.setCelldata(new Cell[0]);
+
+        Cell[] cellArray = getCellData();
+        if (cellArray.length > 0) {
+            workSheet.setCelldata(cellArray);
+        } else {
+            workSheet.setCelldata(new Cell[0]);
+        }
 
         WorkSheetConfig config = new WorkSheetConfig();
         config.setMerge(new Merge());
@@ -94,13 +103,35 @@ public class WorkSheetServiceImpl implements WorkSheetService {
                 cell.getC());
     }
 
-    private void getCellData() {
-        List list = jdbcTemplate.queryForList("select v from cell", List.class);
-//        Map map = jdbcTemplate.queryForMap("select * from cell");
-//        String v = (String)map.get("v");
-//        Cell cell = JSON.parseObject(v, Cell.class);
-//        log.info(v);
-        log.info(list.toString());
-        list.stream().forEach(item -> System.out.println(item.toString()));
+    private Cell[] getCellData() {
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("select * from cell");
+        List<Cell> cellList = new ArrayList<>();
+        if (list.size() > 0) {
+            for (Object obj : list) {
+                log.info(obj.toString());
+                Map map =  (Map)obj;
+                map.remove("ID");
+                map.remove("SHEET_ID");
+                map.remove("FA");
+                map.remove("T");
+                map.remove("M");
+                String v = (String)map.get("V");
+                if (!StringUtils.isEmpty(v)) {
+                    CellV cellV = JSON.parseObject(v, CellV.class);
+                    Cell cell = new Cell();
+                    cell.setV(cellV);
+                    cell.setR((String) map.get("R"));
+                    cell.setC((String)map.get("R"));
+                    cellList.add(cell);
+                }
+
+            }
+        }
+
+        Cell[] cellArray = new Cell[cellList.size()];
+        for (int i = 0; i < cellList.size(); i++) {
+            cellArray[i] = cellList.get(i);
+        }
+        return cellArray;
     }
 }
